@@ -42,6 +42,9 @@ static void pins_init(void)
 	/* initialize buttons inputs */
 	DDRD &= ~(_BV(PD3) | _BV(PD2) | _BV(PD1) | _BV(PD0));
 	PORTD |= _BV(PD3) | _BV(PD2) | _BV(PD1) | _BV(PD0);
+	EICRA = 0b01010101; // generate interrupt request on any edge of D0/D1/D2/D3
+	EIMSK = 0; // but don't enable any actual interrupts
+	EIFR = 0b00001111; // clear EIFR
 #ifdef DEBUG_PINS
 	DDRB |= _BV(PB5);
 	PORTB &= ~_BV(PB5);
@@ -263,9 +266,16 @@ int main(void)
 
 			/* instead of delay..., this should take more than 35ms */
 			bool overwrite_delta;
+			// high = not in contact, low = in contact
+			// PIND 0 EIFR 0: low, no edges -> is low
+			// PIND 0 EIFR 1: low, edge -> is low
+			// PIND 1 EIFR 0: high, no edges -> always high during last 125us
+			// PIND 1 EIFR 1: high, edge -> low at some point in the last 125us
+			const uint8_t btn_raw = PIND & (~EIFR); // 1 means high
+			EIFR = 0b00001111; // clear EIFR
 			struct input inputs[2] = {
-				{.T = !(PIND & _BV(PD2)), .B = !(PIND & _BV(PD0))},
-				{.T = !(PIND & _BV(PD3)), .B = !(PIND & _BV(PD1))}
+				{.T = !(btn_raw & _BV(PD2)), .B = !(btn_raw & _BV(PD0))},
+				{.T = !(btn_raw & _BV(PD3)), .B = !(btn_raw & _BV(PD1))}
 			};
 			BUTTONS_task(1, inputs);
 			bool b1 = BUTTONS_get(0), b2 = BUTTONS_get(1);
