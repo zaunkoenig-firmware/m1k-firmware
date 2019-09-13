@@ -91,7 +91,7 @@ static inline uint8_t spi_read(const uint8_t addr)
 	return data;
 }
 
-static void pmw3366_init(const uint8_t dpi)
+static void pmw3366_init()
 {
 	const uint8_t *psrom = srom;
 
@@ -159,7 +159,6 @@ static void pmw3366_init(const uint8_t dpi)
 	spi_write(0x2b, 0x10);
 
 	// configuration/settings
-	spi_write(0x0f, dpi); // 2000 dpi
 	spi_write(0x42, 0x00); // no angle snapping
 	spi_write(0x0d, 0x60); // invert x,y
 	SS_HIGH;
@@ -213,9 +212,7 @@ int main(void)
 	uint8_t btn_usb_prev = 0x00;
 
 	spi_init();
-	const uint8_t dpi = ((PIND & (1<<6)) >> 6) | ((PIND & (1<<4)) >> 3);
-	const uint8_t dpis[] = {CPI_VAL(1500), CPI_VAL(500), CPI_VAL(600), CPI_VAL(700)};
-	pmw3366_init(dpis[dpi]);
+	pmw3366_init();
 
 	usb_init();
 	while (!usb_configured())
