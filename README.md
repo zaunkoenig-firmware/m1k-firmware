@@ -10,7 +10,7 @@ When you already have the firmware files (because someone sent them to you for e
 2. Open up a terminal and execute the following three commands:  
 `sudo apt-get update -qq`  
 `sudo apt-get install -qq gcc-avr binutils-avr avr-libc`  
-`make`
+`make -C /home/Patrick/Downloads/m1k-firmware-master\m1k-firmware-master`
 3. After make has been executed the two firmware files have appeared in C:\Users\Patrick\Downloads\m1k-firmware-master\m1k-firmware-master. The .hex file is called twobtn.hex and the .eep file is called twobtn.eep.
 4. Install DFU programmer by executing the following two commands in a terminal:  
 `sudo apt-get update -y`  
