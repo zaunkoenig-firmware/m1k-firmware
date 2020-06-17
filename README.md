@@ -20,8 +20,8 @@ When you already have the firmware files (because someone sent them to you for e
 Plug in the M1K while holding down both mouse buttons. After five seconds the cursor will move clockwise in a square to indicate that Angle Snapping and LOD have been changed to default values. This time though, do not let go of your mouse buttons yet. Keep them pressed down for five more seconds until your mouse cursor has frozen.
 7. Now run the following four commands (each command will take a few seconds to finish):  
 `sudo dfu-programmer atmega32u2 erase --force`  
-`sudo dfu-programmer atmega32u2 flash continuous-button-polling-edwin.hex`  
-`sudo dfu-programmer atmega32u2 flash-eeprom twobtn-v0.1.eep --force`  
+`sudo dfu-programmer atmega32u2 flash twobtn.hex`  
+`sudo dfu-programmer atmega32u2 flash-eeprom twobtn.eep --force`  
 `sudo dfu-programmer atmega32u2 start`
 8. After you executed the start command your mouse should be up and running with the new firmware.
 
